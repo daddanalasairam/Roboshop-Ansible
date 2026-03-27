@@ -1,0 +1,22 @@
+- name: Set Prompt
+  ansible.builtin.shell: set-prompt {{ app_name }}-{{ env }}
+
+- name: Load Maven
+  ansible.builtin.include_role:
+    name: common
+    task_from: maven
+
+
+  print_heading "Install MySql Client"
+dnf install mysql -y &>>$log_file
+status_check $?
+
+for sql_file in schema app-user master-data; do
+print_heading "Load SQL File - $sql_file"
+mysql -h <mysql.sairamdevops.online> -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/$sql_file.sql &>>$log_file
+status_check $?
+done
+
+print_heading "Restart Shipping Service"
+systemctl restart shipping &>>$log_file
+status_check $?
