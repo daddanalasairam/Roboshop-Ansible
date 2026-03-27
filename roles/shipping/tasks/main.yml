@@ -6,17 +6,20 @@
     name: common
     task_from: maven
 
+- name: Install MySql Client
+  ansible.builtin.dnf:
+    name: mysql
+    state: present
 
-  print_heading "Install MySql Client"
-dnf install mysql -y &>>$log_file
-status_check $?
+- name: Load SQL File
+  ansible.builtin.shell: mysql -h <mysql-{{ env }}.sairamdevops.online> -uroot -pRoboShop@1 < /app/db/{{ item }}.sql
+  loop:
+    - schema
+    - app-user
+    - master-data
 
-for sql_file in schema app-user master-data; do
-print_heading "Load SQL File - $sql_file"
-mysql -h <mysql.sairamdevops.online> -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/$sql_file.sql &>>$log_file
-status_check $?
-done
+- name: Restart Shipping Service
+  ansible.builtin.systemd_service:
+    name: shipping
+    state: restarted
 
-print_heading "Restart Shipping Service"
-systemctl restart shipping &>>$log_file
-status_check $?
