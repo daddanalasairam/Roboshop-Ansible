@@ -1,0 +1,20 @@
+- name: Install GoLang
+  ansible.builtin.dnf:
+    name: golang
+    state: present
+
+- name: Load App Prerequisites
+  ansible.builtin.include_tasks:
+    file: app_prerequisites.yml
+
+- name: Download Application Dependencies
+  ansible.builtin.shell: |
+    go mod init dispatch
+    go get
+    go build
+  args:
+    chdir: /app
+
+- name: SystemD setup
+  ansible.builtin.include_tasks:
+    file: systemd_setup.yml
