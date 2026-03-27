@@ -1,3 +1,6 @@
+- name: Set Prompt
+  ansible.builtin.shell: set-prompt {{ app_name }}-{{ env }}
+
 - name: Copy MongoDb repo File
   ansible.builtin.copy:
     src: mongodb.repo
