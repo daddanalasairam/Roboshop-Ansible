@@ -1,0 +1,70 @@
+# Ansible Quick Notes (Revision)
+
+## 1. tasks
+
+Main execution part of a role.
+Used to perform actions like installing packages, copying files, starting services.
+
+## 2. handlers
+
+Triggered only when notified by tasks.
+Used mainly to restart or reload services.
+
+## 3. templates
+
+Dynamic files using Jinja2.
+Used when configuration files need variables.
+
+## 4. files
+
+Static files with no variables.
+Used with copy module.
+
+## 5. vars
+
+High priority variables.
+Override default values.
+
+## 6. defaults
+
+Low priority variables.
+Used to define default values only.
+
+## 7. meta
+
+Contains role information and dependencies.
+Defines which roles should run before this role.
+
+## 8. tasks_from
+
+Used to run a specific task file instead of main.yml.
+
+## 9. notify
+
+Used to trigger handlers when a task changes.
+
+## 10. Jinja2
+
+Templating engine used in Ansible.
+Supports variables, loops, and conditions.
+
+## 11. package module
+
+Installs packages.
+Automatically uses apt/yum/dnf based on OS.
+
+## 12. copy vs template
+
+copy: static files
+template: dynamic files with variables
+
+---
+
+## Quick Summary
+
+* tasks → do work
+* handlers → run on change
+* templates → dynamic config
+* files → static files
+* vars/defaults → variables
+* meta → dependencies
