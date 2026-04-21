@@ -103,7 +103,7 @@ Tasks execute only when changes are required, ensuring consistent and safe deplo
 Variables are used for flexibility and environment-based deployments.
 
 ```
-{{ app_name }}
+{{ component }}
 {{ env }}
 ```
 
