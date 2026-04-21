@@ -3,8 +3,8 @@ Description = Catalogue Service
 
 [Service]
 User=roboshop
-Environment=MONGO=true
-Environment=MONGO_URL="mongodb://mongodb-{{ env }}.sairamdevops.online:27017/catalogue"
+Environment=MONGO={{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:MONGO token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}
+Environment=MONGO_URL="{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:MONGO_URL token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
 ExecStart=/bin/node /app/server.js
 SyslogIdentifier=catalogue
 
