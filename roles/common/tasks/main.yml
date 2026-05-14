@@ -1,2 +1,11 @@
 - name: Set Prompt
   ansible.builtin.shell: set-prompt {{ component }}-{{ env }}
+
+- name: Increase disk partition
+  ansible.builtin.shell: growpart /dev/nvme0n1
+  ignore_errors: yes
+
+- name: Extend LV
+  ansible.builtin.shell: lvextend -r -L {{item.size}} /dev/mapper/RootVG-{{ item.volume }}
+  ignore_errors: yes
+  loop: "{{ lvm_sizes }}"
