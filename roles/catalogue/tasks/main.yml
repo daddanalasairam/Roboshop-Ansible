@@ -40,3 +40,14 @@
     env:
       MONGO: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:MONGO token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
       MONGO_URL: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:MONGO_URL token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+
+- name: Schema Container
+  containers.podman.podman_container:
+    name: catalogue-schema
+    image: public.ecr.aws/w8x4g9h7/roboshop-v3/schema-load
+    state: started
+    env:
+      DB_TYPE: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:DB_TYPE token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      APP_GIT_URL: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:APP_GIT_URL token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      DB_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:DB_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      SCHEMA_FILE: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:SCHEMA_FILE token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
