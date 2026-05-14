@@ -1,22 +1,28 @@
-- name: Load Maven
+#- name: Load Maven
+#  ansible.builtin.include_role:
+#    name: common
+#    task_from: maven
+#
+#- name: Install MySql Client
+#  ansible.builtin.dnf:
+#    name: mysql
+#    state: present
+#
+#- name: Load SQL File
+#  ansible.builtin.shell: mysql -h <mysql-{{ env }}.sairamdevops.online> -uroot -p{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/shipping:mysql_root_password token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')} < /app/db/{{ item }}.sql
+#  loop:
+#    - schema
+#    - app-user
+#    - master-data
+#
+#- name: Restart Shipping Service
+#  ansible.builtin.systemd_service:
+#    name: shipping
+#    state: restarted
+#
+
+
+- name: Install Docker
   ansible.builtin.include_role:
     name: common
-    task_from: maven
-
-- name: Install MySql Client
-  ansible.builtin.dnf:
-    name: mysql
-    state: present
-
-- name: Load SQL File
-  ansible.builtin.shell: mysql -h <mysql-{{ env }}.sairamdevops.online> -uroot -p{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/shipping:mysql_root_password token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')} < /app/db/{{ item }}.sql
-  loop:
-    - schema
-    - app-user
-    - master-data
-
-- name: Restart Shipping Service
-  ansible.builtin.systemd_service:
-    name: shipping
-    state: restarted
-
+    task_from: docker
