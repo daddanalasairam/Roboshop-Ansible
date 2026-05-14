@@ -25,3 +25,18 @@
   ansible.builtin.include_role:
     name: common
     task_from: docker
+
+- name: Start App Container
+  containers.podman.podman_container:
+    name: catalogue
+    image: public.ecr.aws/w8x4g9h7/roboshop-v3/catalogue
+    state: started
+
+    restart_policy: "always"
+
+    ports:
+      - "8080:8080"
+
+    env:
+      MONGO: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:MONGO token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      MONGO_URL: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/catalogue:MONGO_URL token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
