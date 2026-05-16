@@ -48,7 +48,7 @@
     - db/schema.sql
     - db/master-date.sql
   containers.podman.podman_container:
-    name: shipping-schema
+    name: shipping-schema-{{item}}
     image: public.ecr.aws/w8x4g9h7/roboshop-v3/schema-load
     state: started
     env:
@@ -56,4 +56,6 @@
       APP_GIT_URL: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/shipping:APP_GIT_URL token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
       DB_USER: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/shipping:DB_USER token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
       DB_PASS: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/shipping:DB_PASS token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      SCHEMA_FILE: "{{ item }}"
+      DB_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/shipping:DB_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
       SCHEMA_FILE: "{{ item }}"
