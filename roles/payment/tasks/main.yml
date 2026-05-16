@@ -7,3 +7,25 @@
   ansible.builtin.include_role:
     name: common
     task_from: docker
+
+- name: Start App Container
+  containers.podman.podman_container:
+    name: payment
+    image: public.ecr.aws/w8x4g9h7/roboshop-v3/payment
+    state: started
+
+    restart_policy: "always"
+
+    ports:
+      - "8080:8080"
+
+    env:
+      CART_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/payment:CART_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      CART_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/payment:CART_PORT token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      USER_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/payment:USER_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      USER_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/payment:USER_PORT token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      AMQP_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/payment:AMQP_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      AMQP_USER: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/payment:AMQP_USER token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      AMQP_PASS: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/payment:AMQP_PASS token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+
+    docker run -d -p 8080:8080 -e CART_HOST=cart-ip -e CART_PORT=8080 -e USER_HOST=user-ip -e USER_PORT=8080 -e AMQP_HOST=rabbitmq-ip -e AMQP_USER=roboshop -e AMQP_PASS=roboshop123 public.ecr.aws/w8x4g9h7/roboshop-v3/payment
