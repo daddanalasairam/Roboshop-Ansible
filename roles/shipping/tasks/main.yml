@@ -49,6 +49,7 @@
     - master-date
   containers.podman.podman_container:
     name: shipping-schema-{{item}}
+    recreate: true
     image: public.ecr.aws/w8x4g9h7/roboshop-v3/schema-load
     state: started
     env:
