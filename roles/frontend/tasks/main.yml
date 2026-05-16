@@ -38,3 +38,26 @@
   ansible.builtin.include_role:
     name: common
     task_from: docker
+
+- name: Start App Container
+  containers.podman.podman_container:
+    name: frontend
+    image: public.ecr.aws/w8x4g9h7/roboshop-v3/frontend
+    state: started
+
+    restart_policy: "always"
+
+    ports:
+      - "80:80"
+
+    env:
+      CATALOGUE_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:CATALOGUE_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      CATALOGUE_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:CATALOGUE_PORT token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      USER_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:USER_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      USER_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:USER_PORT token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      CART_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:CART_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      CART_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:CART_PORT token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      SHIPPING_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:SHIPPING_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      SHIPPING_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:SHIPPING_PORT token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      PAYMENT_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:PAYMENT_HOST token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
+      PAYMENT_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'roboshop-{{env}}/data/frontend:PAYMENT_PORT token={{ vault_token }} url=http://vault-internal.sairamdevops.online:8200')}"
